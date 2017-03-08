@@ -1,0 +1,7 @@
+{
+  "uuid": "darker-overview@mkoura.github.com",
+  "name": "Darker Overview",
+  "description": "Make overview background darker so even white text is readable on bright or colorful wallpapers",
+  "url": "https://github.com/mkoura/gnome-shell-darker-overview",
+  "shell-version": ["3.16", "3.18", "3.20", "3.22"]
+}

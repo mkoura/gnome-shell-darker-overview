@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+    <schema id="org.gnome.shell.extensions.darker-overview" path="/org/gnome/shell/extensions/darker-overview/">
+		<key type="d" name="darkness-factor">
+			<default>5</default>
+			<summary>darkness factor</summary>
+			<description/>
+		</key>
+	</schema>
+</schemalist>
