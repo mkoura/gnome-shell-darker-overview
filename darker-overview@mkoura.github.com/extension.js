@@ -25,34 +25,34 @@ function removeInjection(object, injection, name) {
 var noop = function() {};
 
 function Ext() {
-	this._init.apply(this, arguments);
+    this._init.apply(this, arguments);
 }
 
 Ext.prototype = {};
 Ext.prototype._init = function() {
-	this.enabled = false;
-	this.unbind = noop;
+    this.enabled = false;
+    this.unbind = noop;
 };
 
 Ext.prototype.enable = function() {
-	this.enabled = true;
+    this.enabled = true;
     resetState();
     overviewInjections['_shadeBackgrounds'] = Overview.Overview.prototype._shadeBackgrounds;
-	var pref = (new Settings.Prefs()).DARKNESS;
+    var pref = (new Settings.Prefs()).DARKNESS;
 
-	var binding = pref.changed(Lang.bind(this, function() {
-		this.set_darkness(pref.get());
-	}));
-	this.unbind = function() {
-		pref.disconnect(binding);
-		this.unbind = noop;
-	};
-	this.set_darkness(pref.get());
+    var binding = pref.changed(Lang.bind(this, function() {
+        this.set_darkness(pref.get());
+    }));
+    this.unbind = function() {
+        pref.disconnect(binding);
+        this.unbind = noop;
+    };
+    this.set_darkness(pref.get());
 };
 
 Ext.prototype.disable = function() {
-	this.enabled = false;
-	this.unbind();
+    this.enabled = false;
+    this.unbind();
 
     var i;
 
@@ -63,13 +63,13 @@ Ext.prototype.disable = function() {
 };
 
 Ext.prototype.set_darkness = function(new_darkness) {
-	if(!this.enabled) {
-		return;
-	}
+    if(!this.enabled) {
+        return;
+    }
     if (new_darkness === undefined) {
-	    new_darkness = DEFAULT_VIGNETTE_BRIGHTNESS;
+        new_darkness = DEFAULT_VIGNETTE_BRIGHTNESS;
     } else {
-	    new_darkness = DEFAULT_VIGNETTE_BRIGHTNESS - new_darkness * DARKNESS_STEP;
+        new_darkness = DEFAULT_VIGNETTE_BRIGHTNESS - new_darkness * DARKNESS_STEP;
         new_darkness = new_darkness >= 0.1 ? new_darkness : 0.1;
         new_darkness = new_darkness <= DEFAULT_VIGNETTE_BRIGHTNESS ?
             new_darkness :
@@ -90,5 +90,5 @@ Ext.prototype.set_darkness = function(new_darkness) {
 };
 
 function init() {
-	return new Ext();
+    return new Ext();
 }
