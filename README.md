@@ -2,9 +2,13 @@
 
 Gnome shell extension that makes background in overview darker so even white text is readable on bright or colorful wallpapers.
 
-![Off](https://github.com/mkoura/gnome-shell-darker-overview/raw/master/screenshot-off.png)
+Before:
 
-![On](https://github.com/mkoura/gnome-shell-darker-overview/raw/master/screenshot-on.png)
+![Off](https://github.com/mkoura/gnome-shell-darker-overview/raw/master/screenshot_off.png)
+
+After:
+
+![On](https://github.com/mkoura/gnome-shell-darker-overview/raw/master/screenshot_on.png)
 
 This extension supports gnome-shell 3.16 to 3.22.
 
