@@ -14,7 +14,7 @@ This extension supports gnome-shell versions from 3.16 to 3.22 (and most probabl
 
 ## Installation from extensions.gnome.org
 
-TBA
+https://extensions.gnome.org/extension/1177/darker-overview/
 
 ## Installation from git
 
