@@ -2,8 +2,8 @@
 
 const Gtk = imports.gi.Gtk;
 
-let Extension = imports.misc.extensionUtils.getCurrentExtension();
-let Settings = Extension.imports.settings;
+let Me = imports.misc.extensionUtils.getCurrentExtension();
+let Settings = Me.imports.settings;
 
 function init() {
 }
