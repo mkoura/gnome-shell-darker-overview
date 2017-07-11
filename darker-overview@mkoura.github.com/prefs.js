@@ -1,56 +1,66 @@
 // -*- mode: js2; indent-tabs-mode: nil; js2-basic-offset: 4 -*-
+// jshint moz: true
 
+const GObject = imports.gi.GObject;
 const Gtk = imports.gi.Gtk;
+const Lang = imports.lang;
 
-let Me = imports.misc.extensionUtils.getCurrentExtension();
-let Settings = Me.imports.settings;
+const GettextDomain = 'DarkerOverview';
+const Gettext = imports.gettext.domain(GettextDomain);
+const _ = Gettext.gettext;
+const N_ = function(e) { return e; };
+
+const Me = imports.misc.extensionUtils.getCurrentExtension();
+const Convenience = Me.imports.convenience;
 
 function init() {
+    Convenience.initTranslations(GettextDomain);
 }
 
-function buildPrefsWidget() {
-    let config = new Settings.Prefs();
-    let frame = new Gtk.Box({
-        orientation: Gtk.Orientation.VERTICAL,
-        border_width: 10
-    });
+const DarkerOverviewSettings = new GObject.Class({
+    Name: 'DarkerOverviewPrefs',
+    Extends: Gtk.Grid,
 
-    (function() {
-        let hbox = new Gtk.Box({
-            orientation: Gtk.Orientation.HORIZONTAL,
-            spacing: 20
-        });
+    _init: function(params) {
+        this.parent(params);
+        this.margin = 24;
+        this.spacing = 30;
+        this.row_spacing = 10;
+        this._settings = Convenience.getSettings();
 
-        let label = new Gtk.Label({
-            label: "Overview darkness\n<small>(0 = normal, 10 = darkest)</small>",
+        let label = null;
+        let widget = null;
+        let value = null;
+        let radio = null;
+        let key = null;
+
+        // Darkness Factor
+        key = 'darkness-factor';
+        label = new Gtk.Label({
+            label: _('Overview darkness\n<small>(0 = normal, 10 = darkest)</small>'),
             use_markup: true,
+            hexpand: true,
+            halign: Gtk.Align.START
         });
-        let adjustment = new Gtk.Adjustment({
-            lower: 0,
-            upper: 10,
-            step_increment: 1
-        });
-        let scale = new Gtk.HScale({
-            digits: 0,
-            adjustment: adjustment,
-            value_pos: Gtk.PositionType.RIGHT
-        });
-
-        hbox.add(label);
-        hbox.pack_end(scale, true, true, 0);
-        frame.add(hbox);
-
-        var pref = config.DARKNESS;
-        scale.set_value(pref.get());
-        scale.connect('value-changed', function(sw) {
-            var oldval = pref.get();
-            var newval = sw.get_value();
-            if (newval != pref.get()) {
-                pref.set(newval);
+        widget = new Gtk.SpinButton({halign: Gtk.Align.END});
+        widget.set_sensitive(true);
+        widget.set_range(0, 10);
+        widget.set_value(this._settings.get_int(key));
+        widget.set_increments(1, 2);
+        widget.connect('value-changed', Lang.bind(this, function(w){
+            value = w.get_value_as_int();
+            if (value != this._settings.get_int(key)) {
+                this._settings.set_int(key, value);
             }
-        });
-    })();
+        }));
+        this.attach(label, 0, 1, 1, 1);
+        this.attach(widget, 1, 1, 1, 1);
+    },
+});
 
-    frame.show_all();
-    return frame;
+function buildPrefsWidget() {
+    let widget = new DarkerOverviewSettings();
+    widget.show_all();
+
+    return widget;
 }

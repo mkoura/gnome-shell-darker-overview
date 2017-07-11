@@ -1,17 +1,18 @@
 // -*- mode: js2; indent-tabs-mode: nil; js2-basic-offset: 4 -*-
+// jshint moz: true
 
 const Overview = imports.ui.overview;
 const Tweener = imports.ui.tweener;
 const Lang = imports.lang;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
-const Settings = Me.imports.settings;
+const Convenience = Me.imports.convenience;
 
 const SHADE_ANIMATION_TIME = 0.20;
 const VIGNETTE_SHARPNESS = 0.7;
 const DEFAULT_VIGNETTE_BRIGHTNESS = 0.8;
 const DARKNESS_STEP = 0.07;
 
-
+let settings = null;
 let overviewInjections;
 
 function resetState() {
@@ -31,41 +32,33 @@ function Ext() {
 Ext.prototype = {};
 Ext.prototype._init = function() {
     this.enabled = false;
-    this.unbind = noop;
 };
 
 Ext.prototype.enable = function() {
     this.enabled = true;
     resetState();
     overviewInjections['_shadeBackgrounds'] = Overview.Overview.prototype._shadeBackgrounds;
-    var pref = (new Settings.Prefs()).DARKNESS;
-
-    var binding = pref.changed(Lang.bind(this, function() {
-        this.set_darkness(pref.get());
-    }));
-    this.unbind = function() {
-        pref.disconnect(binding);
-        this.unbind = noop;
-    };
-    this.set_darkness(pref.get());
+    settings = Convenience.getSettings();
+    settings.connect('changed::darkness-factor', Lang.bind(this, this.set_darkness));
+    this.set_darkness();
 };
 
 Ext.prototype.disable = function() {
     this.enabled = false;
-    this.unbind();
+    settings.run_dispose();
 
     var i;
-
     for (i in overviewInjections)
         removeInjection(Overview.Overview.prototype, overviewInjections, i);
 
     resetState();
 };
 
-Ext.prototype.set_darkness = function(new_darkness) {
+Ext.prototype.set_darkness = function() {
     if(!this.enabled) {
         return;
     }
+    let new_darkness = settings.get_int('darkness-factor');
     if (new_darkness === undefined) {
         new_darkness = DEFAULT_VIGNETTE_BRIGHTNESS;
     } else {
