@@ -30,12 +30,9 @@ const DarkerOverviewSettings = new GObject.Class({
 
         let label = null;
         let widget = null;
-        let value = null;
-        let radio = null;
-        let key = null;
 
-        // Darkness Factor
-        key = 'darkness-factor';
+        // darkness factor
+        let darkness_key = 'darkness-factor';
         label = new Gtk.Label({
             label: _('Overview darkness\n<small>(0 = normal, 10 = darkest)</small>'),
             use_markup: true,
@@ -45,16 +42,28 @@ const DarkerOverviewSettings = new GObject.Class({
         widget = new Gtk.SpinButton({halign: Gtk.Align.END});
         widget.set_sensitive(true);
         widget.set_range(0, 10);
-        widget.set_value(this._settings.get_int(key));
+        widget.set_value(this._settings.get_int(darkness_key));
         widget.set_increments(1, 2);
         widget.connect('value-changed', Lang.bind(this, function(w){
-            value = w.get_value_as_int();
-            if (value != this._settings.get_int(key)) {
-                this._settings.set_int(key, value);
-            }
+            this._settings.set_int(darkness_key, w.get_value_as_int());
         }));
         this.attach(label, 0, 1, 1, 1);
         this.attach(widget, 1, 1, 1, 1);
+
+        // show vignette
+        let vignette_key = 'show-vignette';
+        label = new Gtk.Label({
+            label: _('Show vignette'),
+            hexpand: true,
+            halign: Gtk.Align.START
+        });
+        widget = new Gtk.Switch();
+        widget.set_active(this._settings.get_boolean(vignette_key));
+        widget.connect('notify::active', Lang.bind(this, function(w){
+            this._settings.set_boolean(vignette_key, w.active);
+        }));
+        this.attach(label, 0, 2, 1, 1);
+        this.attach(widget, 1, 2, 1, 1);
     },
 });
 

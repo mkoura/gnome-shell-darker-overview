@@ -37,9 +37,10 @@ Ext.prototype._init = function() {
 Ext.prototype.enable = function() {
     this.enabled = true;
     resetState();
-    overviewInjections['_shadeBackgrounds'] = Overview.Overview.prototype._shadeBackgrounds;
+    overviewInjections._shadeBackgrounds = Overview.Overview.prototype._shadeBackgrounds;
     settings = Convenience.getSettings();
     settings.connect('changed::darkness-factor', Lang.bind(this, this.set_darkness));
+    settings.connect('changed::show-vignette', Lang.bind(this, this.set_darkness));
     this.set_darkness();
 };
 
@@ -55,10 +56,13 @@ Ext.prototype.disable = function() {
 };
 
 Ext.prototype.set_darkness = function() {
-    if(!this.enabled) {
+    if (!this.enabled) {
         return;
     }
+
     let new_darkness = settings.get_int('darkness-factor');
+    let show_vignette = settings.get_boolean('show-vignette');
+
     if (new_darkness === undefined) {
         new_darkness = DEFAULT_VIGNETTE_BRIGHTNESS;
     } else {
@@ -69,15 +73,19 @@ Ext.prototype.set_darkness = function() {
             DEFAULT_VIGNETTE_BRIGHTNESS;
     }
 
+    let props = {
+        brightness: new_darkness,
+        time: SHADE_ANIMATION_TIME,
+        transition: 'easeOutQuad'
+    };
+    if (show_vignette) {
+        props.vignette_sharpness = VIGNETTE_SHARPNESS;
+    }
+
     Overview.Overview.prototype._shadeBackgrounds = function() {
         let backgrounds = this._backgroundGroup.get_children();
         for (let i = 0; i < backgrounds.length; i++) {
-            Tweener.addTween(backgrounds[i],
-                             { brightness: new_darkness,
-                               vignette_sharpness: VIGNETTE_SHARPNESS,
-                               time: SHADE_ANIMATION_TIME,
-                               transition: 'easeOutQuad'
-                             });
+            Tweener.addTween(backgrounds[i], props);
         }
     };
 };

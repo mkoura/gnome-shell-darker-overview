@@ -6,5 +6,10 @@
 			<summary>darkness factor</summary>
 			<description/>
 		</key>
+		<key type="b" name="show-vignette">
+			<default>true</default>
+			<summary>show vignette in overview</summary>
+			<description/>
+		</key>
 	</schema>
 </schemalist>
