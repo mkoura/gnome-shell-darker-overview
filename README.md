@@ -10,7 +10,7 @@ After:
 
 ![On](https://github.com/mkoura/gnome-shell-darker-overview/raw/master/screenshot_on.png)
 
-This extension supports gnome-shell versions from 3.16 to 3.22 (and most probably would work on many other versions as well).
+This extension supports gnome-shell versions from 3.14 to 3.24 (and most probably would work on many other versions as well).
 
 ## Installation from extensions.gnome.org
 
