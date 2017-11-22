@@ -66,11 +66,9 @@ Ext.prototype.set_darkness = function() {
     if (new_darkness === undefined) {
         new_darkness = DEFAULT_VIGNETTE_BRIGHTNESS;
     } else {
-        new_darkness = DEFAULT_VIGNETTE_BRIGHTNESS - new_darkness * DARKNESS_STEP;
+        new_darkness = DEFAULT_VIGNETTE_BRIGHTNESS - (new_darkness * DARKNESS_STEP);
         new_darkness = new_darkness >= 0.1 ? new_darkness : 0.1;
-        new_darkness = new_darkness <= DEFAULT_VIGNETTE_BRIGHTNESS ?
-            new_darkness :
-            DEFAULT_VIGNETTE_BRIGHTNESS;
+        new_darkness = new_darkness <= 1.0 ? new_darkness : 1.0;
     }
 
     let props = {
