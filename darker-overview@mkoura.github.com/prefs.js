@@ -34,14 +34,14 @@ const DarkerOverviewSettings = new GObject.Class({
         // darkness factor
         let darkness_key = 'darkness-factor';
         label = new Gtk.Label({
-            label: _('Overview darkness\n<small>(0 = normal, 10 = darkest)</small>'),
+            label: _('Overview darkness\n<small>(-3 = lightest, 0 = normal, 10 = darkest)</small>'),
             use_markup: true,
             hexpand: true,
             halign: Gtk.Align.START
         });
         widget = new Gtk.SpinButton({halign: Gtk.Align.END});
         widget.set_sensitive(true);
-        widget.set_range(0, 10);
+        widget.set_range(-3, 10);
         widget.set_value(this._settings.get_int(darkness_key));
         widget.set_increments(1, 2);
         widget.connect('value-changed', Lang.bind(this, function(w){
