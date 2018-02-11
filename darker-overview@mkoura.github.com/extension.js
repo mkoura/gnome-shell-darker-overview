@@ -10,7 +10,8 @@ const Convenience = Me.imports.convenience;
 const SHADE_ANIMATION_TIME = 0.20;
 const VIGNETTE_SHARPNESS = 0.7;
 const DEFAULT_VIGNETTE_BRIGHTNESS = 0.8;
-const DARKNESS_STEP = 0.07;
+const DARKNESS_STEP = 0.073;
+const ABSOLUTE_DARKNESS = 0.0;
 
 let settings = null;
 let overviewInjections;
@@ -60,25 +61,24 @@ Ext.prototype.set_darkness = function() {
         return;
     }
 
-    let new_darkness = settings.get_int('darkness-factor');
+    let darkness_factor = settings.get_int('darkness-factor');
     let show_vignette = settings.get_boolean('show-vignette');
+    let new_brightness = DEFAULT_VIGNETTE_BRIGHTNESS;
 
-    if (new_darkness === undefined) {
-        new_darkness = DEFAULT_VIGNETTE_BRIGHTNESS;
-    } else {
-        new_darkness = DEFAULT_VIGNETTE_BRIGHTNESS - new_darkness * DARKNESS_STEP;
-        new_darkness = new_darkness >= 0.1 ? new_darkness : 0.1;
-        new_darkness = new_darkness <= DEFAULT_VIGNETTE_BRIGHTNESS ?
-            new_darkness :
+    if (darkness_factor !== undefined) {
+        new_brightness = DEFAULT_VIGNETTE_BRIGHTNESS - darkness_factor * DARKNESS_STEP;
+        new_brightness = new_brightness >= ABSOLUTE_DARKNESS ? new_brightness : ABSOLUTE_DARKNESS;
+        new_brightness = new_brightness <= DEFAULT_VIGNETTE_BRIGHTNESS ?
+            new_brightness :
             DEFAULT_VIGNETTE_BRIGHTNESS;
     }
 
     let props = {
-        brightness: new_darkness,
+        brightness: new_brightness,
         time: SHADE_ANIMATION_TIME,
         transition: 'easeOutQuad'
     };
-    if (show_vignette) {
+    if (show_vignette !== false) {
         props.vignette_sharpness = VIGNETTE_SHARPNESS;
     }
 
