@@ -12,6 +12,7 @@ const VIGNETTE_SHARPNESS = 0.7;
 const DEFAULT_VIGNETTE_BRIGHTNESS = 0.8;
 const DARKNESS_STEP = 0.073;
 const ABSOLUTE_DARKNESS = 0.0;
+const ABSOLUTE_LIGHTNESS = 1.0;
 
 let settings = null;
 let overviewInjections;
@@ -66,11 +67,9 @@ Ext.prototype.set_darkness = function() {
     let new_brightness = DEFAULT_VIGNETTE_BRIGHTNESS;
 
     if (darkness_factor !== undefined) {
-        new_brightness = DEFAULT_VIGNETTE_BRIGHTNESS - darkness_factor * DARKNESS_STEP;
+        new_brightness = DEFAULT_VIGNETTE_BRIGHTNESS - (darkness_factor * DARKNESS_STEP);
         new_brightness = new_brightness >= ABSOLUTE_DARKNESS ? new_brightness : ABSOLUTE_DARKNESS;
-        new_brightness = new_brightness <= DEFAULT_VIGNETTE_BRIGHTNESS ?
-            new_brightness :
-            DEFAULT_VIGNETTE_BRIGHTNESS;
+        new_brightness = new_brightness <= ABSOLUTE_LIGHTNESS ? new_brightness : ABSOLUTE_LIGHTNESS;
     }
 
     let props = {
